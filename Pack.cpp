@@ -1,10 +1,11 @@
 #include "Pack.hpp"
-#include "Card.cpp"
 #include <string>
 #include <cstring>
 #include <cassert>
 #include <array>
 #include <iostream>
+
+using namespace std;
 
 
 // EFFECTS: Initializes the Pack to be in the following standard order:
