@@ -4,6 +4,105 @@
 
 using namespace std;
 
+// trump: SPADES
+// led: DIAMONDS
+TEST(test_card_less_with_led) {
+    Card a(JACK, SPADES);
+    Card b(JACK, SPADES);
+    Card c(JACK, CLUBS);
+    Card d(ACE, DIAMONDS);
+    Card e(JACK, DIAMONDS);
+    Card f(JACK, HEARTS);
+    Card g(TEN, CLUBS);
+    Card h(TEN, HEARTS);
+    Card i;
+    ASSERT_FALSE(Card_less(a,b,SPADES));
+    ASSERT_FALSE(Card_less(b,a,SPADES));
+    ASSERT_TRUE(Card_less(e,c,SPADES));
+    ASSERT_FALSE(Card_less(c,e,SPADES));
+    ASSERT_FALSE(Card_less(c,f,SPADES));
+    ASSERT_TRUE(Card_less(f,c,SPADES));
+    ASSERT_FALSE(Card_less(c,f,SPADES));
+    ASSERT_TRUE(Card_less(d,c,SPADES));
+    ASSERT_TRUE(Card_less(d,a,SPADES));
+    ASSERT_FALSE(Card_less(a,d,SPADES));
+    ASSERT_TRUE(Card_less(g,h,SPADES));
+    ASSERT_FALSE(Card_less(h,g,SPADES));
+    ASSERT_TRUE(Card_less(g,i,SPADES));
+    ASSERT_FALSE(Card_less(i,h,SPADES));
+}
+
+// trump: SPADES
+TEST(test_card_less_no_led) {
+    Card a(JACK, SPADES);
+    Card b(JACK, SPADES);
+    Card c(JACK, CLUBS);
+    Card d(ACE, DIAMONDS);
+    Card e(JACK, DIAMONDS);
+    Card f(JACK, HEARTS);
+    Card g(TEN, CLUBS);
+    Card h(TEN, HEARTS);
+    Card i;
+    ASSERT_FALSE(Card_less(a,b,SPADES));
+    ASSERT_FALSE(Card_less(b,a,SPADES));
+    ASSERT_TRUE(Card_less(e,c,SPADES));
+    ASSERT_FALSE(Card_less(c,e,SPADES));
+    ASSERT_FALSE(Card_less(c,f,SPADES));
+    ASSERT_TRUE(Card_less(f,c,SPADES));
+    ASSERT_FALSE(Card_less(c,f,SPADES));
+    ASSERT_TRUE(Card_less(d,c,SPADES));
+    ASSERT_TRUE(Card_less(d,a,SPADES));
+    ASSERT_FALSE(Card_less(a,d,SPADES));
+    ASSERT_TRUE(Card_less(g,h,SPADES));
+    ASSERT_FALSE(Card_less(h,g,SPADES));
+    ASSERT_TRUE(Card_less(g,i,SPADES));
+    ASSERT_FALSE(Card_less(i,h,SPADES));
+}
+
+TEST(test_suit_next) {
+    ASSERT_TRUE(DIAMONDS == Suit_next(HEARTS));
+    ASSERT_TRUE(CLUBS == Suit_next(SPADES));
+    ASSERT_TRUE(HEARTS == Suit_next(DIAMONDS));
+    ASSERT_TRUE(SPADES == Suit_next(CLUBS));
+}
+
+TEST(test_not_equal_to) {
+    Card a(JACK, DIAMONDS);
+    Card b(JACK, DIAMONDS);
+    Card c(QUEEN, SPADES);
+    ASSERT_FALSE(a != b);
+    ASSERT_FALSE(b != a);
+    ASSERT_TRUE(c != a);
+    ASSERT_TRUE(a != c);
+}
+
+TEST(test_equal_to) {
+    Card a(JACK, HEARTS);
+    Card b(JACK, HEARTS);
+    Card c(FIVE, CLUBS);
+    ASSERT_TRUE(a == b);
+    ASSERT_TRUE(b == a);
+    ASSERT_FALSE(c == a);
+    ASSERT_FALSE(a == c);
+}
+
+TEST(test_greater_than_or_equal_to) {
+    Card a(JACK, HEARTS);
+    Card b(JACK, HEARTS);
+    Card c(JACK, CLUBS);
+    Card e(JACK, SPADES);
+    Card f;
+    Card g(ACE, DIAMONDS);
+    ASSERT_TRUE(a >= b);
+    ASSERT_TRUE(b >= a);
+    ASSERT_FALSE(c >= a);
+    ASSERT_TRUE(a >= c);
+    ASSERT_TRUE(e >= b);
+    ASSERT_FALSE(f >= c);
+    ASSERT_TRUE(e >= f);
+    ASSERT_TRUE(g >= e);
+}
+
 TEST(test_greater_than) {
     Card a(JACK, HEARTS);
     Card b(JACK, HEARTS);
@@ -18,8 +117,7 @@ TEST(test_greater_than) {
     ASSERT_TRUE(e > b);
     ASSERT_FALSE(f > c);
     ASSERT_TRUE(e > f);
-    ASSERT_FALSE(g <= e);
-    ASSERT_TRUE(b <= g);
+    ASSERT_TRUE(g > e);
 }
 
 TEST(test_less_than_or_equal_to) {
