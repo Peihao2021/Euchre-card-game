@@ -30,8 +30,8 @@ Rank string_to_rank(const std::string &str) {
       return static_cast<Rank>(r);
     }
   }
-  assert(false); // Input string didn't match any rank
-  return {};
+ assert(false); // Input string didn't match any rank
+  //return {};
 }
 
 //EFFECTS Prints Rank to stream, for example "Two"
@@ -69,7 +69,7 @@ Suit string_to_suit(const std::string &str) {
     }
   }
   assert(false); // Input string didn't match any suit
-  return {};
+  //return {};
 }
 
 //EFFECTS Prints Suit to stream, for example "Spades"
@@ -94,8 +94,11 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
 //EFFECTS Initializes Card to the Two of Spades
 Card::Card() {
-  rank = string_to_rank("TWO");
-  suit = string_to_suit("SPADES");
+  // rank = string_to_rank("TWO");
+  // suit = string_to_suit("SPADES");
+
+  rank = TWO;
+  suit = SPADES;
 } 
 
 //EFFECTS Initializes Card to specified rank and suit
@@ -117,7 +120,7 @@ Suit Card::get_suit() const {
 //EFFECTS Returns the suit
 //HINT: the left bower is the trump suit!
 Suit Card::get_suit(Suit trump) const {
-  if (rank == 9 && (suit == trump - 2 || suit == trump + 2)) {
+  if (is_left_bower(trump)) {
     return trump;   // when it is a Left Bower treat its suit as trump suit to compare.
   }
   return suit;   

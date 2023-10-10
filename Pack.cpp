@@ -1,11 +1,11 @@
 #include "Pack.hpp"
-#include "Card.cpp"
 #include <string>
 #include <cstring>
 #include <cassert>
 #include <array>
 #include <iostream>
 
+using namespace std;
 
 // EFFECTS: Initializes the Pack to be in the following standard order:
 //          the cards of the lowest suit arranged from lowest rank to
