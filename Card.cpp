@@ -96,7 +96,6 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 Card::Card() {
   // rank = string_to_rank("TWO");
   // suit = string_to_suit("SPADES");
-
   rank = TWO;
   suit = SPADES;
 } 
