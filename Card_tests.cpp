@@ -7,6 +7,7 @@ using namespace std;
 // trump: SPADES
 // led: DIAMONDS
 TEST(test_card_less_with_led) {
+    Card led(NINE, DIAMONDS);
     Card a(JACK, SPADES);
     Card b(JACK, SPADES);
     Card c(JACK, CLUBS);
@@ -16,20 +17,24 @@ TEST(test_card_less_with_led) {
     Card g(TEN, CLUBS);
     Card h(TEN, HEARTS);
     Card i;
-    ASSERT_FALSE(Card_less(a,b,SPADES));
-    ASSERT_FALSE(Card_less(b,a,SPADES));
-    ASSERT_TRUE(Card_less(e,c,SPADES));
-    ASSERT_FALSE(Card_less(c,e,SPADES));
-    ASSERT_FALSE(Card_less(c,f,SPADES));
-    ASSERT_TRUE(Card_less(f,c,SPADES));
-    ASSERT_FALSE(Card_less(c,f,SPADES));
-    ASSERT_TRUE(Card_less(d,c,SPADES));
-    ASSERT_TRUE(Card_less(d,a,SPADES));
-    ASSERT_FALSE(Card_less(a,d,SPADES));
-    ASSERT_TRUE(Card_less(g,h,SPADES));
-    ASSERT_FALSE(Card_less(h,g,SPADES));
-    ASSERT_TRUE(Card_less(g,i,SPADES));
-    ASSERT_FALSE(Card_less(i,h,SPADES));
+    ASSERT_FALSE(Card_less(a,b,led,SPADES));
+    ASSERT_FALSE(Card_less(b,a,led,SPADES));
+    ASSERT_TRUE(Card_less(e,c,led,SPADES));
+    ASSERT_FALSE(Card_less(c,e,led,SPADES));
+    ASSERT_FALSE(Card_less(c,f,led,SPADES));
+    ASSERT_TRUE(Card_less(f,c,led,SPADES));
+    ASSERT_FALSE(Card_less(c,f,led,SPADES));
+    ASSERT_TRUE(Card_less(d,c,led,SPADES));
+    ASSERT_TRUE(Card_less(d,a,led,SPADES));
+    ASSERT_FALSE(Card_less(a,d,led,SPADES));
+    ASSERT_TRUE(Card_less(g,h,led,SPADES));
+    ASSERT_FALSE(Card_less(h,g,led,SPADES));
+    ASSERT_TRUE(Card_less(g,i,led,SPADES));
+    ASSERT_FALSE(Card_less(i,h,led,SPADES));
+    ASSERT_FALSE(Card_less(led,h,led,SPADES));
+    ASSERT_TRUE(Card_less(g,led,led,SPADES));
+    ASSERT_FALSE(Card_less(i,led,led,SPADES));
+    ASSERT_TRUE(Card_less(led,i,led,SPADES));
 }
 
 // trump: SPADES

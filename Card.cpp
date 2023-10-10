@@ -30,6 +30,7 @@ Rank string_to_rank(const std::string &str) {
       return static_cast<Rank>(r);
     }
   }
+  assert(false);
   //return {};
 }
 
