@@ -17,9 +17,9 @@ Pack::Pack(){
 
     int index = 0;
 
-    for(int s = 0; s < 4; s++){
+    for(int s = 3; s >= 0; s--){
         for(int r = 7; r < 13; r++){
-            cards[index] = Card(static_cast<Rank>(r), static_cast<Suit>(s));
+            cards[index] = Card((Rank)r, (Suit)s);
             index++;
         }
     }
