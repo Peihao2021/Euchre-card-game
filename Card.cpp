@@ -30,8 +30,7 @@ Rank string_to_rank(const std::string &str) {
       return static_cast<Rank>(r);
     }
   }
-  assert(false); // Input string didn't match any rank
-  return {};
+  //return {};
 }
 
 //EFFECTS Prints Rank to stream, for example "Two"
@@ -69,7 +68,7 @@ Suit string_to_suit(const std::string &str) {
     }
   }
   assert(false); // Input string didn't match any suit
-  return {};
+  //return {};
 }
 
 //EFFECTS Prints Suit to stream, for example "Spades"
@@ -94,8 +93,11 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
 //EFFECTS Initializes Card to the Two of Spades
 Card::Card() {
-  rank = static_cast<Rank>(0);
-  suit = static_cast<Suit>(0);
+  // rank = string_to_rank("TWO");
+  // suit = string_to_suit("SPADES");
+
+  rank = TWO;
+  suit = SPADES;
 } 
 
 //EFFECTS Initializes Card to specified rank and suit

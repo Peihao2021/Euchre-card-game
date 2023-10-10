@@ -6,7 +6,10 @@
 #include <iostream>
 
 using namespace std;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6ff0ecbefac2e7e49e94569663827ac946ef6142
 
 // EFFECTS: Initializes the Pack to be in the following standard order:
 //          the cards of the lowest suit arranged from lowest rank to
