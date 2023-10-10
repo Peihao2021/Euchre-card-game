@@ -17,8 +17,8 @@ Pack::Pack(){
 
     int index = 0;
 
-    for(int s = 3; s >= 0; s--){
-        for(int r = 7; r < 13; r++){
+    for(int s = SPADES; s >=SPADES; s--){
+        for(int r = NINE; r < ACE + 1; r++){
             cards[index] = Card((Rank)r, (Suit)s);
             index++;
         }
