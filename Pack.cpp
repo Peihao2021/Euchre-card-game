@@ -6,10 +6,6 @@
 #include <iostream>
 
 using namespace std;
-<<<<<<< HEAD
-
-=======
->>>>>>> 6ff0ecbefac2e7e49e94569663827ac946ef6142
 
 // EFFECTS: Initializes the Pack to be in the following standard order:
 //          the cards of the lowest suit arranged from lowest rank to
@@ -21,9 +17,10 @@ Pack::Pack(){
 
     int index = 0;
 
-    for(int s = DIAMONDS; s >= SPADES; s--){
+    for(int s = 0; s < 4; s++){
         for(int r = 7; r < 13; r++){
-            cards[index++] = Card(static_cast<Rank>(r), static_cast<Suit>(s));
+            cards[index] = Card(static_cast<Rank>(r), static_cast<Suit>(s));
+            index++;
         }
     }
 
@@ -42,7 +39,8 @@ Pack::Pack(std::istream& pack_input){
     int index = 0;
 
     while(pack_input >> rank >> junk >> suit){
-        cards[index++] = Card(string_to_rank(rank), string_to_suit(suit));
+        cards[index] = Card(string_to_rank(rank), string_to_suit(suit));
+        index++;
     }
 
     next = 0;
@@ -88,7 +86,6 @@ void Pack::shuffle(){
             cards[2 * i + 1] = half_1[i];
         }
 
-       
     }
 
     delete[] half_1;
