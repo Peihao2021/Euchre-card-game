@@ -17,7 +17,7 @@ Pack::Pack(){
 
     int index = 0;
 
-    for(int s = SPADES; s >=SPADES; s--){
+    for(int s = SPADES; s < DIAMONDS + 1; s++){
         for(int r = NINE; r < ACE + 1; r++){
             cards[index] = Card((Rank)r, (Suit)s);
             index++;
@@ -51,6 +51,7 @@ Pack::Pack(std::istream& pack_input){
 Card Pack::deal_one(){
     Card *next_card = &cards[next];
     ++next;
+    // cout << next_card->get_rank() << " of " << next_card->get_suit() << endl;
     return *next_card;
 }
 
