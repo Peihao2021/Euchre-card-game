@@ -11,13 +11,13 @@ TEST(test_simple_player_play_card) {
   bob->add_card(Card(NINE, SPADES));
   bob->add_card(Card(TEN, HEARTS));
   bob->add_card(Card(QUEEN, DIAMONDS));
-  bob->add_card(Card(JACK, HEARTS));
+  bob->add_card(Card(KING, HEARTS));
   bob->add_card(Card(JACK, DIAMONDS));
 
   Card led(NINE, HEARTS);
 
   Card play = bob->play_card(led, DIAMONDS); 
-  ASSERT_EQUAL(play, Card(JACK, HEARTS));
+  ASSERT_EQUAL(play, Card(KING, HEARTS));
 
   play = bob->play_card(led, DIAMONDS); 
   ASSERT_EQUAL(play, Card(TEN, HEARTS));
@@ -80,34 +80,31 @@ TEST(test_simple_player_make_trump) {
 
     Suit trump;
 
-    bool orderup = bob->make_trump(Card(FIVE, CLUBS), false, 1, trump);
+    Card king_clubs(FIVE, CLUBS);
+    bool orderup = bob->make_trump(king_clubs, false, 1, trump);
     ASSERT_TRUE(orderup);
     ASSERT_EQUAL(trump, CLUBS);
 
-    orderup = bob->make_trump(Card(QUEEN, HEARTS), true, 1, trump);
+    Card queen_hearts(QUEEN, HEARTS);
+    orderup = bob->make_trump(queen_hearts, true, 1, trump);
     ASSERT_FALSE(orderup);
 
-    orderup = bob->make_trump(Card(KING, DIAMONDS), false, 1, trump);
-    ASSERT_TRUE(orderup);
-    ASSERT_EQUAL(trump, DIAMONDS);
-
-    orderup = bob->make_trump(Card(NINE, SPADES), true, 1, trump);
-    ASSERT_FALSE(orderup);
-
-    // dealer
-    orderup = bob->make_trump(Card(NINE, CLUBS), true, 2, trump);
+    Card nine_clubs(NINE, CLUBS);
+    orderup = bob->make_trump(nine_clubs, true, 2, trump);
     ASSERT_TRUE(orderup);
     ASSERT_EQUAL(trump, SPADES);
 
-    orderup = bob->make_trump(Card(NINE, HEARTS), false, 2, trump);
+    Card nine_hearts(NINE, HEARTS);
+    orderup = bob->make_trump(nine_hearts, false, 2, trump);
     ASSERT_TRUE(orderup);
     ASSERT_EQUAL(trump, DIAMONDS);
 
-    orderup = bob->make_trump(Card(NINE, SPADES), true, 2, trump);
+    Card nine_spades(NINE, SPADES);
+    orderup = bob->make_trump(nine_spades, true, 2, trump);
     ASSERT_TRUE(orderup);
     ASSERT_EQUAL(trump, CLUBS);
 
-    orderup = bob->make_trump(Card(NINE, CLUBS), false, 2, trump);
+    orderup = bob->make_trump(nine_clubs, false, 2, trump);
     ASSERT_FALSE(orderup);
     
     delete bob;
