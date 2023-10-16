@@ -5,7 +5,8 @@
 CXX ?= g++
 
 # Compiler flags
-CXXFLAGS ?= --std=c++17 -Wall -Werror -pedantic -g -Wno-sign-compare -Wno-comment
+CXXFLAGS = --std=c++17 -Wall -Werror -pedantic -g -fsanitize=address -fsanitize=undefined
+# CXXFLAGS ?= --std=c++17 -Wall -Werror -pedantic -g -Wno-sign-compare -Wno-comment -fsanitize=address -fsanitize=undefined 
 
 # Run a regression test
 test: Card_public_test.exe Card_tests.exe Pack_public_test.exe Pack_tests.exe \

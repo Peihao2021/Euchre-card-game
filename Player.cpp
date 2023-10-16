@@ -9,9 +9,7 @@ class SimplePlayer : public Player{
     public:
 
     // constructor
-    SimplePlayer(std::string playerName) {
-        name = playerName;
-    }
+    SimplePlayer(std::string playerName) : name(playerName) {}
 
     //EFFECTS returns player's name
     const std::string & get_name() const override {
@@ -43,7 +41,7 @@ class SimplePlayer : public Player{
             }
             return false;
         }
-        else {
+        else { // round 2
             if (is_dealer) {
                 order_up_suit = Suit_next(upcard.get_suit());
                 return true;
@@ -51,7 +49,7 @@ class SimplePlayer : public Player{
             else {
                 int counter = 0;
                 for (int card = 0; card < hand.size(); card++) {
-                    if (hand[card].is_face_or_ace() && hand[card].is_trump(Suit_next(upcard.get_suit()))) {
+                    if (hand[card].is_face_or_ace() && hand[card].get_suit() == Suit_next(upcard.get_suit())) {
                         counter++;
                     }
                 }
@@ -67,13 +65,16 @@ class SimplePlayer : public Player{
     //REQUIRES Player has at least one card
     //EFFECTS  Player adds one card to hand and removes one card from hand.
     void add_and_discard(const Card &upcard) override {
-        int minIdx = 0;
-        for (int idx = 1; idx < hand.size(); idx++) {
-            if (hand[idx] < hand[minIdx]) {
+        int minIdx = -1;
+        Card min = upcard;
+
+        for (int idx = 0; idx < hand.size(); idx++) {
+            if (Card_less(hand[idx], min, upcard.get_suit())) {
                 minIdx = idx;
+                min = hand[idx];
             }
         }
-        if (upcard > hand[minIdx]) {
+        if (minIdx != -1) {
             hand[minIdx] = upcard;
         }
     }
@@ -83,36 +84,32 @@ class SimplePlayer : public Player{
     //  "Lead" means to play the first Card in a trick.  The card
     //  is removed the player's hand.
     Card lead_card(Suit trump) override {
-        bool nonTrump = false;
-        int maxIdx = 0;
-        int maxIdxTrump = 0;
+        int max_non_trump_idx = -1;
+        Card max_non_trump = Card(TWO, Suit_next(trump));
 
-        // checks first card if trump
-        if (!hand[0].is_trump(trump)) {
-            nonTrump = true;
-        }
+        int max_trump_idx = -1;
+        Card max_trump = Card(TWO, Suit_next(trump));
 
         // finds trump and nontrump max value
-        for (int idx = 1; idx < hand.size(); idx++) {
-            if (!hand[idx].is_trump(trump) && hand[idx] > hand[maxIdx]) {
-                maxIdx = idx;
-                nonTrump = true;
+        for (int idx = 0; idx < hand.size(); idx++) {
+            if (!hand[idx].is_trump(trump) && Card_less(max_non_trump, hand[idx], trump)) {
+                max_non_trump = hand[idx];
+                max_non_trump_idx = idx;
             }
-            else if (hand[idx].is_trump(trump) && Card_less(hand[maxIdxTrump], hand[idx], trump)) {
-                maxIdxTrump = idx;
+            else if (hand[idx].is_trump(trump) && Card_less(max_trump, hand[idx], trump)) {
+                max_trump = hand[idx];
+                max_trump_idx = idx;
             }
         }
 
-        // return max value if trump or nontrump
-        if (nonTrump) {
-            Card temp(hand[maxIdx].get_rank(),hand[maxIdx].get_suit());
-            hand.erase(hand.begin() + maxIdx);
-            return temp;
+        // return max card if trump or nontrump
+        if (max_non_trump_idx != -1) {
+            hand.erase(hand.begin() + max_non_trump_idx);
+            return max_non_trump;
         }
         else {
-            Card temp(hand[maxIdxTrump].get_rank(),hand[maxIdxTrump].get_suit());
-            hand.erase(hand.begin() + maxIdxTrump);
-            return temp;
+            hand.erase(hand.begin() + max_trump_idx);
+            return max_trump;
         }
     }
 
@@ -120,26 +117,30 @@ class SimplePlayer : public Player{
     //EFFECTS  Plays one Card from Player's hand according to their strategy.
     //  The card is removed from the player's hand.
     Card play_card(const Card &led_card, Suit trump) override {
-        int maxIdx = 0;
-        int minIdx = 0;
+        int max_follow_suit_idx = -1;
+        Card max_card = Card(TWO, led_card.get_suit(trump));
 
-        for (int idx = 1; idx < hand.size(); idx++) {
-            if (led_card.get_suit() == hand[idx].get_suit() && Card_less(hand[maxIdx], hand[idx], trump)) {
-                maxIdx = idx;
+        int min_lowest_card_idx = -1;
+        Card min_card = Card(JACK, trump);
+
+        // determine the lowest card and the highest card that follows suit
+        for (int idx = 0; idx < hand.size(); idx++) {
+            if (led_card.get_suit(trump) == hand[idx].get_suit(trump) && Card_less(max_card, hand[idx], trump)) {
+                max_follow_suit_idx = idx;
+                max_card = hand[idx];
             }
-            else if (Card_less(hand[idx], hand[minIdx], led_card, trump)) {
-                minIdx = idx;
+            else if (Card_less(hand[idx], min_card, led_card, trump)) {
+                min_lowest_card_idx = idx;
+                min_card = hand[idx];
             }
         }
-        if (hand[maxIdx].get_suit() == led_card.get_suit()) {
-            Card temp(hand[maxIdx].get_rank(),hand[maxIdx].get_suit());
-            hand.erase(hand.begin() + maxIdx);
-            return temp;
+        if (max_follow_suit_idx != -1) {
+            hand.erase(hand.begin() + max_follow_suit_idx);
+            return max_card;
         }
         else {
-            Card temp(hand[minIdx].get_rank(),hand[minIdx].get_suit());
-            hand.erase(hand.begin() + minIdx);
-            return temp;
+            hand.erase(hand.begin() + min_lowest_card_idx);
+            return min_card;
         }
     }
 
@@ -151,9 +152,7 @@ class SimplePlayer : public Player{
 class HumanPlayer : public Player{
     public:
 
-    HumanPlayer(std::string playerName) {
-        name = playerName;
-    }
+    HumanPlayer(std::string playerName) : name(playerName) {}
 
     //EFFECTS returns player's name
     const std::string & get_name() const override {
@@ -222,7 +221,7 @@ class HumanPlayer : public Player{
         std::string decision;
         std::cin >> decision;
 
-        Card temp(hand[stoi(decision)].get_rank(),hand[stoi(decision)].get_suit());
+        Card temp = hand[stoi(decision)];
         hand.erase(hand.begin() + stoi(decision));
         return temp;
     }
@@ -238,7 +237,7 @@ class HumanPlayer : public Player{
         std::string decision;
         std::cin >> decision;
 
-        Card temp(hand[stoi(decision)].get_rank(),hand[stoi(decision)].get_suit());
+        Card temp = hand[stoi(decision)];
         hand.erase(hand.begin() + stoi(decision));
         return temp;
     }
@@ -276,6 +275,5 @@ Player * Player_factory(const std::string &name,
     return new HumanPlayer(name);
   }
   // Invalid strategy if we get here
-  assert(false);
   return nullptr;
 }
