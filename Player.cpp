@@ -116,32 +116,85 @@ class SimplePlayer : public Player{
     //REQUIRES Player has at least one card
     //EFFECTS  Plays one Card from Player's hand according to their strategy.
     //  The card is removed from the player's hand.
+    // Card play_card(const Card &led_card, Suit trump) override {
+    //     int max_follow_suit_idx = -1;
+    //     Card max_card = Card(TWO, led_card.get_suit(trump));
+
+    //     int min_lowest_card_idx = -1;
+    //     Card min_card = Card(JACK, trump);
+
+    //     // determine the lowest card and the highest card that follows suit
+    //     for (int idx = 0; idx < hand.size(); idx++) {
+    //         if (led_card.get_suit(trump) == hand[idx].get_suit(trump) && Card_less(max_card, hand[idx], trump)) {
+    //             max_follow_suit_idx = idx;
+    //             max_card = hand[idx];
+    //         }
+    //         else if (Card_less(hand[idx], min_card, led_card, trump)) {
+    //             min_lowest_card_idx = idx;
+    //             min_card = hand[idx];
+    //         }
+    //     }
+    //     if (max_follow_suit_idx != -1) {
+    //         hand.erase(hand.begin() + max_follow_suit_idx);
+    //         return max_card;
+    //     }
+    //     else {
+    //         hand.erase(hand.begin() + min_lowest_card_idx);
+    //         return min_card;
+    //     }
+    // }
+
     Card play_card(const Card &led_card, Suit trump) override {
-        int max_follow_suit_idx = -1;
-        Card max_card = Card(TWO, led_card.get_suit(trump));
 
-        int min_lowest_card_idx = -1;
-        Card min_card = Card(JACK, trump);
+        std::vector<Card> note_suit; // note down the preferable card suit
+        std::vector<Card> note_rank; // note down the preferable card suit
+        Card lowest_rank_card;
+        Card highest_rank_card;
+        int cnt_1 = 0;  //note lowest_rank_card index if no same suit as lead 
+        int cnt_2 = 0;  //note if there is only 1 same suit as lead 
+        int cnt_3 = 0;  ////note highest_rank_card index if there are many same suit cards as lead
 
-        // determine the lowest card and the highest card that follows suit
-        for (int idx = 0; idx < hand.size(); idx++) {
-            if (led_card.get_suit(trump) == hand[idx].get_suit(trump) && Card_less(max_card, hand[idx], trump)) {
-                max_follow_suit_idx = idx;
-                max_card = hand[idx];
-            }
-            else if (Card_less(hand[idx], min_card, led_card, trump)) {
-                min_lowest_card_idx = idx;
-                min_card = hand[idx];
+
+        //if there is no same suit, then compare rank
+        Card temp;
+        for(int idx = 0; idx < hand.size() - 1; idx++){
+            if(Card_less(hand[idx], hand[idx + 1], trump)){
+                lowest_rank_card = hand[idx];
+                cnt_1 = idx; //note lowest_rank_card index
             }
         }
-        if (max_follow_suit_idx != -1) {
-            hand.erase(hand.begin() + max_follow_suit_idx);
-            return max_card;
+
+        //search for same suit with lead card
+        for(int idx = 0; idx < hand.size(); idx++){
+            if(hand[idx].get_suit(trump) == led_card.get_suit(trump)){
+                note_suit.push_back(hand[idx]);
+                cnt_2 = idx;
+            }
+            else{continue;}
         }
-        else {
-            hand.erase(hand.begin() + min_lowest_card_idx);
-            return min_card;
+
+        
+
+        if(note_suit.size() == 0){
+            hand.erase(hand.begin() + cnt_1);
+            return lowest_rank_card;
         }
+        else if(note_suit.size() == 1){
+            hand.erase(hand.begin() + cnt_2);
+            return note_suit[0];
+        }
+        else{
+            //if there are same suit cards, pick highest card
+            for(int idx = 0; idx < note_suit.size() - 1; idx++){
+                if(Card_less(hand[idx], hand[idx + 1], trump)){
+                    highest_rank_card = note_suit[idx + 1];
+                    cnt_3 = idx + 1;
+                }
+            }
+            hand.erase(hand.begin() + cnt_3);
+            return highest_rank_card;
+        }
+
     }
 
     private:
