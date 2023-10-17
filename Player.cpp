@@ -148,23 +148,22 @@ class SimplePlayer : public Player{
 
         std::vector<Card> note_suit; // note down the preferable card suit
         std::vector<Card> note_rank; // note down the preferable card suit
-        Card lowest_rank_card;
-        Card highest_rank_card;
+        Card lowest_rank_card = Card(JACK, trump);;
+        Card highest_rank_card = Card(TWO, Suit_next(trump));;
         int cnt_1 = 0;  //note lowest_rank_card index if no same suit as lead 
         int cnt_2 = 0;  //note if there is only 1 same suit as lead 
         int cnt_3 = 0;  ////note highest_rank_card index if there are many same suit cards as lead
 
 
-        //if there is no same suit, then compare rank
-        Card temp;
-        for(int idx = 0; idx < hand.size() - 1; idx++){
-            if(Card_less(hand[idx], hand[idx + 1], trump)){
+        //先找最低的牌
+        for(int idx = 0; idx < hand.size(); idx++){
+            if(Card_less(hand[idx], lowest_rank_card, trump)){
                 lowest_rank_card = hand[idx];
                 cnt_1 = idx; //note lowest_rank_card index
             }
         }
 
-        //search for same suit with lead card
+        //再看有没有和lead同花色的牌
         for(int idx = 0; idx < hand.size(); idx++){
             if(hand[idx].get_suit(trump) == led_card.get_suit(trump)){
                 note_suit.push_back(hand[idx]);
@@ -185,10 +184,11 @@ class SimplePlayer : public Player{
         }
         else{
             //if there are same suit cards, pick highest card
-            for(int idx = 0; idx < note_suit.size() - 1; idx++){
-                if(Card_less(hand[idx], hand[idx + 1], trump)){
-                    highest_rank_card = note_suit[idx + 1];
-                    cnt_3 = idx + 1;
+            for(int idx = 0; idx < hand.size(); idx++){
+                if(hand[idx].get_suit(trump) == led_card.get_suit(trump)
+                   && Card_less(highest_rank_card, hand[idx], trump)){
+                    highest_rank_card = hand[idx];
+                    cnt_3 = idx;
                 }
             }
             hand.erase(hand.begin() + cnt_3);
@@ -196,6 +196,8 @@ class SimplePlayer : public Player{
         }
 
     }
+
+
 
     private:
     std::vector<Card> hand;
