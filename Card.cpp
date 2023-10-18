@@ -68,8 +68,7 @@ Suit string_to_suit(const std::string &str) {
       return static_cast<Suit>(s);
     }
   }
-  assert(false); // Input string didn't match any suit
-  //return {};
+  assert(false);
 }
 
 //EFFECTS Prints Suit to stream, for example "Spades"

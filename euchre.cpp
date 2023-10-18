@@ -6,7 +6,6 @@
 #include <cassert>
 #include <vector>
 #include <cstdlib>
-#include <sstream>
 #include "Pack.hpp"
 #include "Player.hpp"
 #include "Card.hpp"
@@ -40,10 +39,12 @@ class Game {
 
         // initialize shuffle status to true or false using shuffleInput
         if (shuffleInput == "shuffle") { 
-            shuffle = true; 
-            pack.shuffle();
+            shuffle = true;
         } // set shuffle to true or false
-        else { shuffle = false; }
+        else { 
+            shuffle = false; 
+        }
+        shuffleDeck(shuffle);
     }
 
     void play() {
@@ -96,7 +97,7 @@ class Game {
             cout << players[1]->get_name() << " and " << players[3]->get_name() << " have " << player_1_and_3_score << " points\n\n";
 
             dealer = (dealer + 1) % 4;
-            pack.shuffle();
+            shuffleDeck(shuffle);
             round++;
             
         }
@@ -105,6 +106,10 @@ class Game {
         }
         else if (player_1_and_3_score >= pointsToWin) {
             print_winner(1); // gives the index of the winner
+        }
+        // delete dynamic memory players
+        for (size_t i = 0; i < players.size(); ++i) {
+            delete players[i];
         }
     }
 
@@ -188,11 +193,11 @@ class Game {
 
             // if player calls trump
             if (players[player]->make_trump(upCard, isDealer, round, trump)) {
+                cout <<  players[player]->get_name() << " orders up " << trump << endl;
                 // if round one, dealer add and discard
                 if (round == 1) { 
                     players[dealer]->add_and_discard(upCard);
                 }
-                cout <<  players[player]->get_name() << " orders up " << trump << endl;
                 return player;
             }
             else { // player does not call trump
@@ -317,6 +322,5 @@ int main(int argc, char *argv[]) {
                         argv[4], argv[5], argv[6],
                         argv[7], argv[8], argv[9], 
                         argv[10], argv[11]);
-
     oneGame.play();
 }

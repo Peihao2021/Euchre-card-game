@@ -154,7 +154,6 @@ class SimplePlayer : public Player{
         int cnt_2 = 0;  //note if there is only 1 same suit as lead 
         int cnt_3 = 0;  ////note highest_rank_card index if there are many same suit cards as lead
 
-
         //先找最低的牌
         for(int idx = 0; idx < hand.size(); idx++){
             if(Card_less(hand[idx], lowest_rank_card, trump)){
@@ -171,8 +170,6 @@ class SimplePlayer : public Player{
             }
             else{continue;}
         }
-
-        
 
         if(note_suit.size() == 0){
             hand.erase(hand.begin() + cnt_1);
@@ -196,9 +193,6 @@ class SimplePlayer : public Player{
         }
 
     }
-
-
-
     private:
     std::vector<Card> hand;
     std::string name;
@@ -218,6 +212,7 @@ class HumanPlayer : public Player{
     //EFFECTS  adds Card c to Player's hand
     void add_card(const Card &c) override {
         hand.push_back(c);
+        std::sort(hand.begin(), hand.end());
     }
 
     //REQUIRES round is 1 or 2
@@ -232,10 +227,7 @@ class HumanPlayer : public Player{
         std::string decision;
         std::cin >> decision;
 
-        if (decision == "pass") {
-            return false;
-        }
-        else {
+        if (decision != "pass") {
             order_up_suit = string_to_suit(decision);
             return true;
         }
@@ -245,20 +237,14 @@ class HumanPlayer : public Player{
     //REQUIRES Player has at least one card
     //EFFECTS  Player adds one card to hand and removes one card from hand.
     void add_and_discard(const Card &upcard) override {
-        std::sort(hand.begin(), hand.end());
-
-        std::cout << "Human player " << name << ", please select a card to discard:\n";
-        std::cout << "[-1]" << upcard << "\n";
-
         print_hand();
+        std::cout << "Discard upcard: [-1]\n";
+        std::cout << "Human player " << name << ", please select a card to discard:\n";;
 
         std::string decision;
         std::cin >> decision;
 
-        if (-1 == stoi(decision)) {
-            return;
-        }
-        else {
+        if (stoi(decision) != 1) {
             hand[stoi(decision)] = upcard;
             std::sort(hand.begin(), hand.end());
         }
@@ -269,9 +255,8 @@ class HumanPlayer : public Player{
     //  "Lead" means to play the first Card in a trick.  The card
     //  is removed the player's hand.
     Card lead_card(Suit trump) override {
-        std::cout << "Human player " << name << ", please select a card:\n";
-        
         print_hand();
+        std::cout << "Human player " << name << ", please select a card:\n";
         
         std::string decision;
         std::cin >> decision;
@@ -285,16 +270,7 @@ class HumanPlayer : public Player{
     //EFFECTS  Plays one Card from Player's hand according to their strategy.
     //  The card is removed from the player's hand.
     Card play_card(const Card &led_card, Suit trump) override {
-        std::cout << "Human player " << name << ", please select a card:\n";
-
-        print_hand();
-        
-        std::string decision;
-        std::cin >> decision;
-
-        Card temp = hand[stoi(decision)];
-        hand.erase(hand.begin() + stoi(decision));
-        return temp;
+        return lead_card(trump);
     }
 
     private:
