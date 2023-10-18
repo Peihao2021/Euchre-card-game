@@ -81,32 +81,27 @@ TEST(test_simple_player_make_trump) {
 
     Suit trump;
 
-    Card king_clubs(FIVE, CLUBS);
-    bool orderup = bob->make_trump(king_clubs, false, 1, trump);
-    ASSERT_TRUE(orderup);
+    bool orderup1 = bob->make_trump(Card(FIVE, CLUBS), false, 1, trump);
+    ASSERT_TRUE(orderup1);
     ASSERT_EQUAL(trump, CLUBS);
 
-    Card queen_hearts(QUEEN, HEARTS);
-    orderup = bob->make_trump(queen_hearts, true, 1, trump);
-    ASSERT_FALSE(orderup);
+    bool orderup2 = bob->make_trump(Card(QUEEN, HEARTS), true, 1, trump);
+    ASSERT_FALSE(orderup2);
 
-    Card nine_clubs(NINE, CLUBS);
-    orderup = bob->make_trump(nine_clubs, true, 2, trump);
-    ASSERT_TRUE(orderup);
+    bool orderup3 = bob->make_trump(Card(NINE, CLUBS), true, 2, trump);
+    ASSERT_TRUE(orderup3);
     ASSERT_EQUAL(trump, SPADES);
 
-    Card nine_hearts(NINE, HEARTS);
-    orderup = bob->make_trump(nine_hearts, false, 2, trump);
-    ASSERT_TRUE(orderup);
+    bool orderup4 = bob->make_trump(Card(NINE, DIAMONDS), true, 2, trump);
+    ASSERT_TRUE(orderup4);
+    ASSERT_EQUAL(trump, HEARTS);
+
+    bool orderup5 = bob->make_trump(Card(NINE, HEARTS), false, 2, trump);
+    ASSERT_TRUE(orderup5);
     ASSERT_EQUAL(trump, DIAMONDS);
 
-    Card nine_spades(NINE, SPADES);
-    orderup = bob->make_trump(nine_spades, true, 2, trump);
-    ASSERT_TRUE(orderup);
-    ASSERT_EQUAL(trump, CLUBS);
-
-    orderup = bob->make_trump(nine_clubs, false, 2, trump);
-    ASSERT_FALSE(orderup);
+    bool orderup6 = bob->make_trump(Card(NINE, CLUBS), false, 2, trump);
+    ASSERT_FALSE(orderup6);
     
     delete bob;
 }
@@ -469,7 +464,6 @@ TEST(play_card_round1) {
     Card test_8 = III->play_card(led_8, SPADES);
     ASSERT_EQUAL(test_8, Card(JACK, SPADES));
     delete III;
-
 
     Player * JJJ = Player_factory("JJJ", "Simple");
     JJJ->add_card(Card(KING, HEARTS));
