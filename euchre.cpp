@@ -39,7 +39,10 @@ class Game {
         pack = Pack(input); // read the pack and cards order
 
         // initialize shuffle status to true or false using shuffleInput
-        if (shuffleInput == "shuffle") { shuffle = true; } // set shuffle to true or false
+        if (shuffleInput == "shuffle") { 
+            shuffle = true; 
+            pack.shuffle();
+        } // set shuffle to true or false
         else { shuffle = false; }
     }
 
