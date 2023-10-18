@@ -68,7 +68,7 @@ class Game {
             // initalize trick counter and round leader
             int trump_pair_tricks = 0; // team that called trump
             int non_trump_pair_tricks = 0;  // team that did not call trump
-            int leader = 1;
+            int leader = (dealer + 1) % 4;
 
             // play 5 rounds
             for (int round = 0; round < 5; round++) { 
@@ -176,11 +176,15 @@ class Game {
     }
     
     int make_trump(vector<Player*> players, Card upCard) {
-        // iterate over two rounds
-        for (int i = dealer + 1; i < dealer + 9; i++) { 
-            int player = i % 4; // determine player index
-            int round = (i - 1) / 4 + 1; // determine round number
-            bool isDealer = player == 0; // determine if player if dealer
+        
+        int passes = 0;
+        int currentPlayer = dealer;
+        while (passes < 8) {
+            int player = (currentPlayer + 1) % 4; // determine player index
+            currentPlayer = player;
+            int round = passes / 4 + 1; // determine round number
+            // cout << players[player]->get_name() << "Round: " << round <<endl; 
+            bool isDealer = player == dealer; // determine if player if dealer
 
             // if player calls trump
             if (players[player]->make_trump(upCard, isDealer, round, trump)) {
@@ -194,8 +198,9 @@ class Game {
             else { // player does not call trump
                cout <<  players[player]->get_name() << " passes\n";
             }
+            passes++;
         }
-        return -1; // need to compile
+        return -1;
     }
 
     int play_hand(int leader, Suit trump) {
@@ -204,13 +209,16 @@ class Game {
         cout << led_card << " led by " << players[leader]->get_name() << endl;
 
         // three other players play cards
-        int winner = 0;
+        Card maxCard = led_card;
+        int winner = leader;
         for (int i = 1; i < 4; i++) { 
             int player = (leader + i) % 4;
             // cout << "Player: " << player << endl;
             Card playCard = players[player]->play_card(led_card, trump); // player plays card
             cout << playCard << " played by " << players[player]->get_name() << endl;
-            if (Card_less(led_card, playCard, led_card, trump)) { // check if card is greater than lead card
+            if (Card_less(maxCard, playCard, led_card, trump)) { // check if card is greater than max card
+                // cout << players[player]->get_name() << " played " << playCard << endl;
+                maxCard = playCard;
                 winner = player; // set idx to index of the player with highest card
             }
         }
@@ -220,49 +228,39 @@ class Game {
     }
     
     void score_calculation(int trump_tricks, int non_trump_tricks, int called_trump) {
-        stringstream term;
-        int team1 = 0;
-        int team2 = 0;
+
         if (called_trump == 0 || called_trump == 2) {
             if (trump_tricks == 5) {
+                print_winner_hand(players, 0);
                 player_0_and_2_score += 2;
-                team1 += 2;
-                term << "marched!\n";
+                cout << "marched!\n";
             }
             else if (trump_tricks == 3 || trump_tricks == 4) {
+                print_winner_hand(players, 0);
                 player_0_and_2_score += 1;
-                team1 += 1;
             }
             if (non_trump_tricks >= 3 && trump_tricks <= 5) {
+                print_winner_hand(players, 1);
                 player_1_and_3_score += 2;
-                team2 += 2;
-                term << "euchred!\n";
+                cout << "euchred!\n";
             }
         }
         else {
             if (trump_tricks == 5) {
+                print_winner_hand(players, 1);
                 player_1_and_3_score += 2;
-                team2 += 2;
-                term << "marched!\n";
+                cout << "march!\n";
             }
             else if (trump_tricks == 3 || trump_tricks == 4) {
+                print_winner_hand(players, 1);
                 player_1_and_3_score += 1;
-                team2 += 2;
             }
             if (non_trump_tricks >= 3 && trump_tricks <= 5) {
-                player_0_and_2_score += 2;
-                team1 += 2;
-                term << "euchred!\n";
-            }
-        }
-        if (team1 > team2) {
                 print_winner_hand(players, 0);
+                player_0_and_2_score += 2;
+                cout << "euchred!\n";
             }
-        else if (team2 < team1) {
-                print_winner_hand(players, 1);
         }
-        string output = term.str();
-        cout << output;
     }
 
     

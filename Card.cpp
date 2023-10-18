@@ -246,69 +246,43 @@ Suit Suit_next(Suit suit) {
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, Suit trump) { 
-  if (a == b) { // checks if two cards are equal
-      return false;
-    }
-  else if (!a.is_trump(trump) && b.is_trump(trump)) { // checks if second card is trump
-    return true;
-  }
-  else if (a.is_trump(trump) && !b.is_trump(trump)) { // checks if first card is trump
+  if (a.is_right_bower(trump)) {
     return false;
   }
-  else if (a.is_trump(trump) && b.is_trump(trump)) { // checks if both cards are trump
-    if (!a.is_right_bower(trump) && b.is_right_bower(trump)) { // check if second card is right bower
-      return true;
-    }
-    else if (a.is_right_bower(trump) && !b.is_right_bower(trump)) { // check if first card is right bower
-      return false;
-    }
-    else if (!a.is_left_bower(trump) && b.is_left_bower(trump)) { // check if second card is left bower
-      return true;
-    }
-    else if (a.is_left_bower(trump) && !b.is_left_bower(trump)) { // check if first card is left bower
-      return false;
-    }
-    return a < b; // if none of the cards are left and right bowers, check if first card less than second card
+  else if (b.is_right_bower(trump)) {
+    return !a.is_right_bower(trump);
   }
-  else {
-    return a < b; // if none of the cards are trump, check if first card less than second card
+  else if (a.is_left_bower(trump)) {
+    return b.is_right_bower(trump);
   }
+  else if (b.is_left_bower(trump)) {
+    return !a.is_left_bower(trump) && !a.is_right_bower(trump);
+  }
+  else if (a.is_trump(trump) && b.is_trump(trump)) {
+    return a < b;
+  }
+  else if (!a.is_trump(trump) && !b.is_trump(trump)) {
+    return a < b;
+  }
+  return !a.is_trump(trump) && b.is_trump(trump);
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) { 
-  if (a == b) { // checks if two cards are equal
-      return false;
-    }
-  else if (!a.is_trump(trump) && b.is_trump(trump)) { // checks if second card is trump
-    return true;
+  if (a.get_suit(trump) == led_card.get_suit() && b.get_suit(trump) == led_card.get_suit()) {
+    return Card_less(a, b, trump);
   }
-  else if (a.is_trump(trump) && !b.is_trump(trump)) { // checks if first card is trump
+  else if (a.get_suit(trump) != led_card.get_suit() && b.get_suit(trump) != led_card.get_suit()) {
+    return Card_less(a, b, trump);
+  }
+  else if (a.get_suit(trump) == led_card.get_suit() && !b.is_trump(trump)) {
     return false;
   }
-  else if (a.is_trump(trump) && b.is_trump(trump)) { // checks if both cards are trump
-    if (!a.is_right_bower(trump) && b.is_right_bower(trump)) {
-      return true;
-    }
-    else if (a.is_right_bower(trump) && !b.is_right_bower(trump)) { 
-      return false;
-    }
-    else if (!a.is_left_bower(trump) && b.is_left_bower(trump)) { // check if first card is right bower
-      return true;
-    }
-    else if (a.is_left_bower(trump) && !b.is_left_bower(trump)) {
-      return false;
-    }
-    return a < b;
-  }
-  else if (a.get_suit() != led_card.get_suit() && b.get_suit() == led_card.get_suit()) {
+  else if (!a.is_trump(trump) && b.get_suit(trump) == led_card.get_suit()) {
     return true;
-  }
-  else if (a.get_suit() == led_card.get_suit() && b.get_suit() != led_card.get_suit()) {
-    return false;
   }
   else {
-    return a < b;
+    return Card_less(a, b, trump);
   }
 }
