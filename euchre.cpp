@@ -79,11 +79,7 @@ class Game {
                     // cout << "round: " << round << " Non Trump pair" << endl;
                 }
             }
-
-            // cout << "Called Trump: " << calledTrump << endl;
-            // cout << "Called Trump Tricks: " << trump_pair_tricks << endl;
-            // cout << "Other Tricks: " << non_trump_pair_tricks << endl;
-
+            
             // score calculation
             score_calculation(trump_pair_tricks, non_trump_pair_tricks, calledTrump);
 

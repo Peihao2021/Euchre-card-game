@@ -48,20 +48,18 @@ class SimplePlayer : public Player{
                 order_up_suit = Suit_next(upcard.get_suit());
                 return true;
             }
-            else {
-                int counter = 0;
-                for (int card = 0; card < hand.size(); card++) {
-                    if (hand[card].is_face_or_ace() && 
-                        hand[card].get_suit() == Suit_next(upcard.get_suit())) {
-                        counter++;
-                    }
+            int counter = 0;
+            for (int card = 0; card < hand.size(); card++) {
+                if (hand[card].is_face_or_ace() && 
+                    hand[card].get_suit() == Suit_next(upcard.get_suit())) {
+                    counter++;
                 }
-                if (counter >= 1) {
-                    order_up_suit = Suit_next(upcard.get_suit());
-                    return true;
-                }
-                return false;
             }
+            if (counter >= 1) {
+                order_up_suit = Suit_next(upcard.get_suit());
+                return true;
+            }
+            return false;
         }
     }
 
