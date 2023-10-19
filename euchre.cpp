@@ -16,22 +16,13 @@ class Game {
  public:
 
     Game(string fileName, string shuffleInput, 
-    int points, string player0Name, string player0Type,
-    string player1Name, string player1Type,
-    string player2Name, string player2Type, 
-    string player3Name, string player3Type) {
+    int points) {
 
         // initialize pointsToWin, team points and staring dealer index
         pointsToWin = points;
         player_0_and_2_score = 0;
         player_1_and_3_score = 0;
         dealer = 0;
-
-        // push players into vector
-        players.push_back(Player_factory(player0Name, player0Type));
-        players.push_back(Player_factory(player1Name, player1Type));
-        players.push_back(Player_factory(player2Name, player2Type));
-        players.push_back(Player_factory(player3Name, player3Type));
 
         // initialize deck using given file
         ifstream input(fileName);
@@ -45,6 +36,10 @@ class Game {
             shuffle = false; 
         }
         shuffleDeck(shuffle);
+    }
+
+    void addPlayers(string name, string strategy) {
+        players.push_back(Player_factory(name, strategy));
     }
 
     void play() {
@@ -128,12 +123,14 @@ class Game {
 
     void print_winner(int team) {
         // print the winner of the game
-        cout << players[team]->get_name() << " and " << players[team + 2]->get_name() << " win!\n";
+        cout << players[team]->get_name() << " and " 
+             << players[team + 2]->get_name() << " win!\n";
     }
 
     void print_winner_hand(vector<Player*> players, int winner) {
         // print the winner of the round
-        cout << players[winner]->get_name() << " and " << players[winner + 2]->get_name() << " win the hand\n";
+        cout << players[winner]->get_name() << " and " 
+             << players[winner + 2]->get_name() << " win the hand\n";
     }
 
     void shuffleDeck(bool shuffleOption) {
@@ -193,7 +190,8 @@ class Game {
 
             // if player calls trump
             if (players[player]->make_trump(upCard, isDealer, round, trump)) {
-                cout <<  players[player]->get_name() << " orders up " << trump << endl;
+                cout <<  players[player]->get_name() << " orders up " 
+                     << trump << endl;
                 // if round one, dealer add and discard
                 if (round == 1) { 
                     players[dealer]->add_and_discard(upCard);
@@ -219,12 +217,11 @@ class Game {
         for (int i = 1; i < 4; i++) { 
             int player = (leader + i) % 4;
             // cout << "Player: " << player << endl;
-            Card playCard = players[player]->play_card(led_card, trump); // player plays card
+            Card playCard = players[player]->play_card(led_card, trump); 
             cout << playCard << " played by " << players[player]->get_name() << endl;
-            if (Card_less(maxCard, playCard, led_card, trump)) { // check if card is greater than max card
-                // cout << players[player]->get_name() << " played " << playCard << endl;
+            if (Card_less(maxCard, playCard, led_card, trump)) { 
                 maxCard = playCard;
-                winner = player; // set idx to index of the player with highest card
+                winner = player; // index of highest card
             }
         }
 
@@ -232,7 +229,8 @@ class Game {
         return winner; // return index of player who won the trick
     }
     
-    void score_calculation(int trump_tricks, int non_trump_tricks, int called_trump) {
+    void score_calculation(int trump_tricks, int non_trump_tricks, 
+                           int called_trump) {
 
         if (called_trump == 0 || called_trump == 2) {
             if (trump_tricks == 5) {
@@ -290,12 +288,12 @@ int main(int argc, char *argv[]) {
     }
 
     // Check if Players are all Human players or Simple players
-    for(int i = 5; i < 12; i+=2){
+    for(int i = 5; i < 12; i += 2){
         if(!(strcmp(argv[i], "Human") == 0 || strcmp(argv[i], "Simple") == 0)) {
             cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
             << "NAME4 TYPE4" << endl;
-        return 1;
+            return 1;
         }
     }            
 
@@ -318,9 +316,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    Game oneGame = Game(argv[1], argv[2], atoi(argv[3]),
-                        argv[4], argv[5], argv[6],
-                        argv[7], argv[8], argv[9], 
-                        argv[10], argv[11]);
+    Game oneGame = Game(argv[1], argv[2], atoi(argv[3]));
+    for(int i = 4; i < 12; i += 2){
+        oneGame.addPlayers(argv[i], argv[i + 1]);
+    }  
     oneGame.play();
 }

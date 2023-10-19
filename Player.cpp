@@ -27,11 +27,13 @@ class SimplePlayer : public Player{
     //EFFECTS If Player wishes to order up a trump suit then return true and
     //  change order_up_suit to desired suit.  If Player wishes to pass, then do
     //  not modify order_up_suit and return false.
-    bool make_trump(const Card &upcard, bool is_dealer, int round, Suit &order_up_suit) const override {
+    bool make_trump(const Card &upcard, bool is_dealer, 
+                    int round, Suit &order_up_suit) const override {
         if (round == 1) {
             int counter = 0;
             for (int card = 0; card < hand.size(); card++) {
-                if (hand[card].is_face_or_ace() && hand[card].is_trump(upcard.get_suit())) {
+                if (hand[card].is_face_or_ace() && 
+                    hand[card].is_trump(upcard.get_suit())) {
                     counter++;
                 }
             }
@@ -49,7 +51,8 @@ class SimplePlayer : public Player{
             else {
                 int counter = 0;
                 for (int card = 0; card < hand.size(); card++) {
-                    if (hand[card].is_face_or_ace() && hand[card].get_suit() == Suit_next(upcard.get_suit())) {
+                    if (hand[card].is_face_or_ace() && 
+                        hand[card].get_suit() == Suit_next(upcard.get_suit())) {
                         counter++;
                     }
                 }
@@ -92,11 +95,13 @@ class SimplePlayer : public Player{
 
         // finds trump and nontrump max value
         for (int idx = 0; idx < hand.size(); idx++) {
-            if (!hand[idx].is_trump(trump) && Card_less(max_non_trump, hand[idx], trump)) {
+            if (!hand[idx].is_trump(trump) && 
+                Card_less(max_non_trump, hand[idx], trump)) {
                 max_non_trump = hand[idx];
                 max_non_trump_idx = idx;
             }
-            else if (hand[idx].is_trump(trump) && Card_less(max_trump, hand[idx], trump)) {
+            else if (hand[idx].is_trump(trump) && 
+                Card_less(max_trump, hand[idx], trump)) {
                 max_trump = hand[idx];
                 max_trump_idx = idx;
             }
@@ -113,46 +118,15 @@ class SimplePlayer : public Player{
         }
     }
 
-    //REQUIRES Player has at least one card
-    //EFFECTS  Plays one Card from Player's hand according to their strategy.
-    //  The card is removed from the player's hand.
-    // Card play_card(const Card &led_card, Suit trump) override {
-    //     int max_follow_suit_idx = -1;
-    //     Card max_card = Card(TWO, led_card.get_suit(trump));
-
-    //     int min_lowest_card_idx = -1;
-    //     Card min_card = Card(JACK, trump);
-
-    //     // determine the lowest card and the highest card that follows suit
-    //     for (int idx = 0; idx < hand.size(); idx++) {
-    //         if (led_card.get_suit(trump) == hand[idx].get_suit(trump) && Card_less(max_card, hand[idx], trump)) {
-    //             max_follow_suit_idx = idx;
-    //             max_card = hand[idx];
-    //         }
-    //         else if (Card_less(hand[idx], min_card, led_card, trump)) {
-    //             min_lowest_card_idx = idx;
-    //             min_card = hand[idx];
-    //         }
-    //     }
-    //     if (max_follow_suit_idx != -1) {
-    //         hand.erase(hand.begin() + max_follow_suit_idx);
-    //         return max_card;
-    //     }
-    //     else {
-    //         hand.erase(hand.begin() + min_lowest_card_idx);
-    //         return min_card;
-    //     }
-    // }
-
     Card play_card(const Card &led_card, Suit trump) override {
 
         std::vector<Card> note_suit; // note down the preferable card suit
         std::vector<Card> note_rank; // note down the preferable card suit
         Card lowest_rank_card = Card(JACK, trump);;
         Card highest_rank_card = Card(TWO, Suit_next(trump));;
-        int cnt_1 = 0;  //note lowest_rank_card index if no same suit as lead 
-        int cnt_2 = 0;  //note if there is only 1 same suit as lead 
-        int cnt_3 = 0;  ////note highest_rank_card index if there are many same suit cards as lead
+        int cnt_1 = 0; //lowest_rank index if no same suit as lead 
+        int cnt_2 = 0; //if there is only 1 same suit as lead 
+        int cnt_3 = 0; //highest_rank index if many same suit as lead
 
         //先找最低的牌
         for(int idx = 0; idx < hand.size(); idx++){
@@ -218,11 +192,13 @@ class HumanPlayer : public Player{
     //REQUIRES round is 1 or 2
     //MODIFIES order_up_suit
     //EFFECTS If Player wishes to order up a trump suit then return true and
-    //  change order_up_suit to desired suit.  If Player wishes to pass, then do
-    //  not modify order_up_suit and return false.
-    bool make_trump(const Card &upcard, bool is_dealer, int round, Suit &order_up_suit) const override {
+    //  change order_up_suit to desired suit. If Player wishes to pass, 
+    //  then do not modify order_up_suit and return false.
+    bool make_trump(const Card &upcard, bool is_dealer, 
+                    int round, Suit &order_up_suit) const override {
         print_hand();
-        std::cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
+        std::cout << "Human player " << name 
+                    << ", please enter a suit, or \"pass\":\n";
         
         std::string decision;
         std::cin >> decision;
@@ -239,7 +215,8 @@ class HumanPlayer : public Player{
     void add_and_discard(const Card &upcard) override {
         print_hand();
         std::cout << "Discard upcard: [-1]\n";
-        std::cout << "Human player " << name << ", please select a card to discard:\n";;
+        std::cout << "Human player " << name 
+                  << ", please select a card to discard:\n";;
 
         std::string decision;
         std::cin >> decision;
