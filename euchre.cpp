@@ -28,7 +28,8 @@ class Game {
         ifstream input(fileName);
         pack = Pack(input); // read the pack and cards order
 
-        // initialize shuffle status to true or false using shuffleInput
+        // initialize shuffle status 
+        //to true or false using shuffleInput
         if (shuffleInput == "shuffle") { 
             shuffle = true;
         } // set shuffle to true or false
@@ -45,7 +46,8 @@ class Game {
     void play() {
 
         int round = 0;
-        while (player_0_and_2_score < pointsToWin && player_1_and_3_score < pointsToWin ) {
+        while (player_0_and_2_score < pointsToWin 
+               && player_1_and_3_score < pointsToWin){
 
             // print hand number
             cout << "Hand " << round << endl;
@@ -59,7 +61,8 @@ class Game {
             cout << upCard << " turned up\n";
 
             // returns which player makes trup 
-            int calledTrump = make_trump(players, upCard); // index of player who calls trump, used in point calculation
+            int calledTrump = make_trump(players, upCard); 
+            // index of player who calls trump, used in point calculation
             
             // initalize trick counter and round leader
             int trump_pair_tricks = 0; // team that called trump
@@ -70,22 +73,33 @@ class Game {
             for (int round = 0; round < 5; round++) { 
                 // leader starts the round
                 leader = play_hand(leader, trump);
-                if (leader == calledTrump || leader == calledTrump - 2 || leader == calledTrump + 2) {
+                if (leader == calledTrump 
+                || leader == calledTrump - 2 
+                || leader == calledTrump + 2) {
+
                     trump_pair_tricks++;
-                    // cout << "round: " << round << " Trump pair" << endl;
+            // cout << "round: " 
+            //<< round << " Trump pair" << endl;
                 }
                 else {
                     non_trump_pair_tricks++;
-                    // cout << "round: " << round << " Non Trump pair" << endl;
+            // cout << "round: " << round 
+            //<< " Non Trump pair" << endl;
                 }
             }
             
             // score calculation
-            score_calculation(trump_pair_tricks, non_trump_pair_tricks, calledTrump);
+            score_calculation(trump_pair_tricks, 
+            non_trump_pair_tricks, calledTrump);
 
             // print score
-            cout << players[0]->get_name() << " and " << players[2]->get_name() << " have " << player_0_and_2_score << " points\n";
-            cout << players[1]->get_name() << " and " << players[3]->get_name() << " have " << player_1_and_3_score << " points\n\n";
+            cout << players[0]->get_name() << " and " 
+            << players[2]->get_name() << " have " 
+            << player_0_and_2_score << " points\n";
+
+            cout << players[1]->get_name() << " and " 
+            << players[3]->get_name() << " have " 
+            << player_1_and_3_score << " points\n\n";
 
             dealer = (dealer + 1) % 4;
             shuffleDeck(shuffle);
@@ -139,6 +153,17 @@ class Game {
     }
 
     void deal(vector<Player*> players, int dealer_idx) {
+
+        // vector<int> order {3, 2, 3, 2, 2, 3, 2, 3};
+        // cout << order.size() << endl;
+
+        // for (int i = 0; i < order.size(); i++) {
+        //  for (int j = 0; j < order[j]; j++) {
+        //   players[(dealer_idx + i + 1) % 4]
+        //   ->add_card(pack.deal_one());
+        //   }
+        // }
+
         //batch 1 deals 3-2-3-2 order
         for (int i = 0; i < 3; i++) {
             players[(dealer_idx + 1) % 4]->add_card(pack.deal_one());
@@ -181,11 +206,13 @@ class Game {
             int player = (currentPlayer + 1) % 4; // determine player index
             currentPlayer = player;
             int round = passes / 4 + 1; // determine round number
-            // cout << players[player]->get_name() << "Round: " << round <<endl; 
-            bool isDealer = player == dealer; // determine if player if dealer
+        //cout << players[player]->get_name() << "Round: " << round <<endl; 
+            bool isDealer = player == dealer; 
+            // determine if player if dealer
 
             // if player calls trump
-            if (players[player]->make_trump(upCard, isDealer, round, trump)) {
+            if (players[player]->make_trump(upCard, isDealer, round, trump))
+            {
                 cout <<  players[player]->get_name() << " orders up " 
                      << trump << endl;
                 // if round one, dealer add and discard
@@ -205,7 +232,8 @@ class Game {
     int play_hand(int leader, Suit trump) {
         // leader leads with card
         Card led_card = players[leader]->lead_card(trump);
-        cout << led_card << " led by " << players[leader]->get_name() << endl;
+        cout << led_card << " led by " 
+             << players[leader]->get_name() << endl;
 
         // three other players play cards
         Card maxCard = led_card;
@@ -214,7 +242,8 @@ class Game {
             int player = (leader + i) % 4;
             // cout << "Player: " << player << endl;
             Card playCard = players[player]->play_card(led_card, trump); 
-            cout << playCard << " played by " << players[player]->get_name() << endl;
+            cout << playCard << " played by " 
+                 << players[player]->get_name() << endl;
             if (Card_less(maxCard, playCard, led_card, trump)) { 
                 maxCard = playCard;
                 winner = player; // index of highest card
@@ -261,7 +290,6 @@ class Game {
             }
         }
     }
-
     
 };
 
